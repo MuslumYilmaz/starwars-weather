@@ -6,6 +6,7 @@ import Mustafar from './images/mustafar.webp';
 import Naboo from './images/naboo.jpg';
 import Endor from './images/endor.jpg';
 import Tatooine from './images/tattoine.jpg';
+import errorImage from './images/404.jpg';
 
 
 class WeatherData extends Component {
@@ -18,7 +19,8 @@ class WeatherData extends Component {
             image: '',
             galaxy : '',
             response : '',
-            description : ''
+            description : '',
+            error: false
         }
 
     this.handleChange = this.handleChange.bind(this);
@@ -36,18 +38,25 @@ class WeatherData extends Component {
        console.log(this.state.value);
 
        let value = this.state.value;
+        try {
+            await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${value}&units=metric&appid=93d05955375cda164ef8f110d180e26a`)
+            .then(res => res.json())
+            .then(
+              (result) => {
+                  this.setState({error: false});
+                  console.log(result.weather[0]);
+                  let weather = Math.floor(result.main.feels_like);
+                  let city = result.name;
+                  let description = result.weather[0].description;
+     
+                  this.galaxies(weather, city, description);
+              })
+        } catch (error) {
+            this.setState({error: true});
+            this.setState({display: false});
+            console.log(error);
+        }
 
-       await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${value}&units=metric&appid=93d05955375cda164ef8f110d180e26a`)
-       .then(res => res.json())
-       .then(
-         (result) => {
-             console.log(result.weather[0]);
-             let weather = Math.floor(result.main.feels_like);
-             let city = result.name;
-             let description = result.weather[0].description;
-
-             this.galaxies(weather, city, description);
-         })
     }
 
     galaxies = (weather, city, description) => {
@@ -101,6 +110,10 @@ class WeatherData extends Component {
         }
     }
 
+    errorPopup = () => {
+        this.setState({error: false});
+    }
+
     render() {
         return (
         <div className="row">
@@ -112,7 +125,7 @@ class WeatherData extends Component {
                                 <label htmlFor="icon_prefix">Enter your city</label>
                                 <input id="icon_prefix" type="text" className="validate" value={this.state.value} onChange={this.handleChange} />
                             </div>
-                            <div className="col s6 ">
+                            <div className="col s6">
                             <button className="btn-floating pulse valign btn-large" href="/#"><i className="material-icons">cloud_queue</i></button>
                             
                             </div>
@@ -138,9 +151,27 @@ class WeatherData extends Component {
                     </div>
                  : null}
                 </div>
+
+                {this.state.error ? 
+                <div className="row">
+                    <div className="col s2 m4">
+                        <div className="card  z-depth-4">
+                            <div className="card-image">
+                                <img src={errorImage} alt="img"/>
+                                <span className="card-title">404</span>
+                                <a className="btn-floating halfway-fab waves-effect waves-light red" onClick={this.errorPopup}><i class="material-icons">check</i></a>
+                            </div>
+                            <div className="card-content">
+                                <p>Seems like there is an issue with your search :(</p>
+                            </div>
+                            <div className="card-action">
+                                <p>Please try again.</p>
+                            </div>
+                        </div>
+                    </div>    
+                </div> : null}
             </div>
         </div>    
-
             
         )
     }
