@@ -48,12 +48,12 @@ class WeatherData extends Component {
                   let weather = Math.floor(result.main.feels_like);
                   let city = result.name;
                   let description = result.weather[0].description;
-     
+                  this.setState({display: true});
+
                   this.galaxies(weather, city, description);
               })
         } catch (error) {
-            this.setState({error: true});
-            this.setState({display: false});
+            this.setState({display: false, error: true});
             console.log(error);
         }
 
@@ -64,45 +64,22 @@ class WeatherData extends Component {
 
         switch (true) {
             case weather <= 0:
-                this.setState({image: Hoth});
-                this.setState({galaxy: 'Hoth'});
-                this.setState({response: `Oh my ${weather}°? it feels like ${this.state.galaxy} out there`});
-                this.setState({description: description});
-                this.setState({display: true});
+                this.setState({image: Hoth, galaxy: 'Hoth', description: description, response: `Oh my ${weather}°? it feels like ${this.state.galaxy} out there`});
                 break;
             case weather > 0 && weather <= 15:
-                this.setState({image: Coruscant});
-                this.setState({galaxy: 'Coruscant'});
-                this.setState({response: `Yikes ${weather}°? it's like ${this.state.galaxy} out there`});
-                this.setState({description: description});
-                this.setState({display: true});
+                this.setState({image: Coruscant, galaxy: 'Coruscant', description: description, response: `Yikes ${weather}°? it's like ${this.state.galaxy} out there`});
                 break;  
             case weather > 15 && weather <= 25:
-                this.setState({image: Naboo});
-                this.setState({galaxy: 'Naboo'});
-                this.setState({response: `hmm ${weather}° huh? ${city} feels like ${this.state.galaxy}`});
-                this.setState({description: description});
-                this.setState({display: true});
+                this.setState({image: Naboo, galaxy: 'Naboo', description: description, response: `hmm ${weather}° huh? ${city} feels like ${this.state.galaxy}`});
                 break;
             case weather > 25 && weather <= 30:
-                this.setState({image: Endor});
-                this.setState({galaxy: 'Endor'});
-                this.setState({response: `hmm ${weather}° huh? ${city} feels like ${this.state.galaxy}`});
-                this.setState({display: true});
+                this.setState({image: Endor, galaxy: 'Endor', description: description, response: `hmm ${weather}° huh? ${city} feels like ${this.state.galaxy}`});
                 break;    
             case weather > 30 && weather <= 35:
-                this.setState({image: Tatooine})
-                this.setState({galaxy: 'Tatooine'});
-                this.setState({response: `hmm ${weather}° huh? ${city} feels like ${this.state.galaxy}`});
-                this.setState({description: description});
-                this.setState({display: true});
+                this.setState({image: Tatooine, galaxy: 'Tatooine', description: description, response: `hmm ${weather}° huh? ${city} feels like ${this.state.galaxy}`})
                 break;  
             case weather >= 35:
-                this.setState({image: Mustafar})
-                this.setState({galaxy: 'Mustafar'})
-                this.setState({response: `hmm ${weather}° huh? ${city} feels like ${this.state.galaxy}`});
-                this.setState({description: description});
-                this.setState({display: true});
+                this.setState({image: Mustafar, galaxy: 'Mustafar', description: description, response: `hmm ${weather}° huh? ${city} feels like ${this.state.galaxy}`})
                 break;
             default:
                 console.log(weather)
@@ -159,7 +136,7 @@ class WeatherData extends Component {
                             <div className="card-image">
                                 <img src={errorImage} alt="img"/>
                                 <span className="card-title">404</span>
-                                <a className="btn-floating halfway-fab waves-effect waves-light red" onClick={this.errorPopup}><i class="material-icons">check</i></a>
+                                <a className="btn-floating halfway-fab waves-effect waves-light red" href="/#" onClick={this.errorPopup}><i class="material-icons">check</i></a>
                             </div>
                             <div className="card-content">
                                 <p>Seems like there is an issue with your search :(</p>
